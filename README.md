@@ -22,7 +22,7 @@ Backend для FAQ-аккордеона. Отдаёт REST API на `net/http`, 
 ### Запуск через Docker
 
 ```
-cp .env.example .env
+cp .env.example deployments/.env
 make docker-up
 make migrate-up
 ```
