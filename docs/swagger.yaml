@@ -1,0 +1,223 @@
+basePath: /api/v1
+definitions:
+  domain.CreateFAQRequest:
+    description: CreateFAQRequest describes request body for creating a FAQ.
+    properties:
+      content:
+        type: string
+      is_active:
+        type: boolean
+      position:
+        type: integer
+      title:
+        type: string
+    type: object
+  domain.ErrorResponse:
+    description: ErrorResponse describes an error payload.
+    properties:
+      error:
+        type: string
+    type: object
+  domain.FAQFullResponse:
+    description: FAQFullResponse is a full FAQ representation.
+    properties:
+      content:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      position:
+        type: integer
+      title:
+        type: string
+    type: object
+  domain.FAQListItemResponse:
+    description: FAQListItemResponse is a short FAQ representation used in lists.
+    properties:
+      content:
+        type: string
+      id:
+        type: string
+      position:
+        type: integer
+      title:
+        type: string
+    type: object
+  domain.FAQListResponse:
+    description: FAQListResponse wraps a list response.
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/domain.FAQListItemResponse'
+        type: array
+    type: object
+  domain.FAQResponse:
+    description: FAQResponse wraps a single FAQ response.
+    properties:
+      data:
+        $ref: '#/definitions/domain.FAQFullResponse'
+    type: object
+  domain.MessageResponse:
+    description: MessageResponse is a simple message response.
+    properties:
+      message:
+        type: string
+    type: object
+  domain.UpdateFAQRequest:
+    description: UpdateFAQRequest describes request body for updating a FAQ.
+    properties:
+      content:
+        type: string
+      is_active:
+        type: boolean
+      position:
+        type: integer
+      title:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Backend for FAQ accordion.
+  title: FAQ Backend API
+  version: "1.0"
+paths:
+  /faqs:
+    get:
+      description: Get active FAQs ordered by position
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.FAQListResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: List FAQs
+      tags:
+      - faqs
+    post:
+      consumes:
+      - application/json
+      description: Create new FAQ item
+      parameters:
+      - description: FAQ payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateFAQRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.FAQResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Create FAQ
+      tags:
+      - faqs
+  /faqs/{id}:
+    delete:
+      description: Delete FAQ by id (idempotent)
+      parameters:
+      - description: FAQ ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.MessageResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Delete FAQ
+      tags:
+      - faqs
+    get:
+      description: Get one FAQ by id
+      parameters:
+      - description: FAQ ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.FAQResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Get FAQ
+      tags:
+      - faqs
+    put:
+      consumes:
+      - application/json
+      description: Update FAQ by id
+      parameters:
+      - description: FAQ ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: FAQ payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/domain.UpdateFAQRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.FAQResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/domain.ErrorResponse'
+      summary: Update FAQ
+      tags:
+      - faqs
+swagger: "2.0"

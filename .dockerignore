@@ -1,0 +1,15 @@
+.git
+.gitignore
+
+.env
+.env.local
+.env.example
+
+bin/
+build/
+
+deployments/docker-compose.yml
+
+*.md
+
+.DS_Store
